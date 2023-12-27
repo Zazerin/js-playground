@@ -4,6 +4,7 @@ import {
 import {
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import {
   Frame,
@@ -59,7 +60,7 @@ const AppLayout = props => {
   } = useLaunches(onSuccessSound, onAbortSound, onFailureSound);
 
   const planets = usePlanets();
-  
+
   return <div className={classes.content}>
     <Header onNav={animateFrame} />
     <Centered className={classes.centered}>
@@ -92,6 +93,9 @@ const AppLayout = props => {
             </Route>
             <Route exact path="/history">
               <History entered={anim.entered} launches={launches} />
+            </Route>
+            <Route path="*">
+              <Redirect to="/" />
             </Route>
           </Switch>
           </div>
