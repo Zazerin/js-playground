@@ -24,6 +24,9 @@
     "start": "node src/server.js",
     "cluster": "pm2 start src/server.js -i max"
   },
+  "jest": {
+    "detectOpenHandles": true
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

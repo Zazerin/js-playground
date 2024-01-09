@@ -4,7 +4,7 @@ const { getPlanetByName } = require('./planets.model');
 const DEFAULT_FLIGHT_NUMBER = 100;
 
 async function getAllLaunches () {
-  return await launchesModel.find({}, { _id: 0, __v: 0 })
+  return await launchesModel.find({}, { _id: 0, __v: 0 });
 }
 
 async function getLastFlightNumber () {
