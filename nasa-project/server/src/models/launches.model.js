@@ -1,7 +1,19 @@
 const launchesModel = require('./launches.mongo');
 const { getPlanetByName } = require('./planets.model');
+const { getSpaceXLaunches } = require('../services/spacex-api');
 
 const DEFAULT_FLIGHT_NUMBER = 100;
+
+async function getList () {
+  const launches = await getSpaceXLaunches();
+  const formattedLaunches = launches.flatMap((launch) => ({
+      
+    })
+  )
+  console.log('res', res);
+}
+
+getList();
 
 async function getAllLaunches () {
   return await launchesModel.find({}, { _id: 0, __v: 0 });
@@ -14,7 +26,7 @@ async function getLastFlightNumber () {
 }
 
 async function saveLaunch (launch) {
-  return await launchesModel.updateOne(
+  return await launchesModel.findByIdAndUpdate(
     {
       flightNumber: launch.flightNumber
     },
