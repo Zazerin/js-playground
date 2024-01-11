@@ -9,7 +9,7 @@ const axiosConfig = {
 const axiosInstance = axios.create(axiosConfig);
 
 async function getSpaceXLaunches () {
-  const { data } = await axiosInstance.post('/launches/query', {
+  const { data, status } = await axiosInstance.post('/launches/query', {
     query: {},
     options: {
       pagination: false,
@@ -29,6 +29,10 @@ async function getSpaceXLaunches () {
       ]
     }
   });
+
+  if (status !== 200) {
+    throw new Error('Launch data download failed');
+  }
 
   return data.docs;
 }

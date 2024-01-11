@@ -4,8 +4,6 @@ const launchesSchema = new mongoose.Schema({
   flightNumber: {
     type: Number,
     required: true,
-    min: 100,
-    max: 999,
   },
   mission: {
     type: String,
@@ -21,9 +19,8 @@ const launchesSchema = new mongoose.Schema({
   },
   target: {
     type: String,
-    required: true,
   },
-  customer: [ String ],
+  customers: [ String ],
   upcoming: {
     type: Boolean,
     required: true,

@@ -4,16 +4,38 @@ const { getSpaceXLaunches } = require('../services/spacex-api');
 
 const DEFAULT_FLIGHT_NUMBER = 100;
 
-async function getList () {
-  const launches = await getSpaceXLaunches();
-  const formattedLaunches = launches.flatMap((launch) => ({
-      
-    })
-  )
-  console.log('res', res);
-}
+async function syncSpaceXLaunches () {
 
-getList();
+  const firstLaunch = await isExistsLaunch(1);
+
+  if (firstLaunch) {
+    return;
+  }
+
+  const launches = await getSpaceXLaunches();
+
+  const launchDocs = launches.map((launch) => {
+    const customers = launch.payloads.flatMap((payload) => payload.customers);
+
+    return ({
+      flightNumber: launch.flight_number,
+      mission: launch.name,
+      rocket: launch.rocket.name,
+      launchDate: launch.date_local,
+      customers,
+      upcoming: launch.upcoming,
+      success: launch.success,
+    })
+  })
+
+  for (const launchDoc of launchDocs) {
+    try {
+      await saveLaunch(launchDoc);
+    } catch (error) {
+      console.log('error', error.message);
+    }
+  }
+}
 
 async function getAllLaunches () {
   return await launchesModel.find({}, { _id: 0, __v: 0 });
@@ -26,7 +48,7 @@ async function getLastFlightNumber () {
 }
 
 async function saveLaunch (launch) {
-  return await launchesModel.findByIdAndUpdate(
+  return await launchesModel.findOneAndUpdate(
     {
       flightNumber: launch.flightNumber
     },
@@ -75,6 +97,7 @@ async function abortLaunchById (launchId) {
 }
 
 module.exports = {
+  syncSpaceXLaunches,
   getAllLaunches,
   addNewLaunch,
   isExistsLaunch,

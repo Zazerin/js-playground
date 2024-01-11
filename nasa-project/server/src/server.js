@@ -2,6 +2,7 @@ const http = require('http');
 
 const app = require('./app');
 const { loadPlanetsData } = require('./models/planets.model');
+const { syncSpaceXLaunches } = require('./models/launches.model');
 const { connectMongoDB, disconnectMongoDB } = require('./services/mongodb');
 
 const PORT = process.env.PORT || 3001;
@@ -20,6 +21,7 @@ async function onShutdown () {
 async function startServer () {
   await connectMongoDB(MONGO_URL);
   await loadPlanetsData();
+  await syncSpaceXLaunches();
   
   server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`)
