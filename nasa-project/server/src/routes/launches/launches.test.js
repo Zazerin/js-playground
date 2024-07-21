@@ -1,13 +1,15 @@
 const request = require('supertest');
 const app = require('../../app');
+const { loadPlanetsData } = require('../../models/planets.model');
+const { syncSpaceXLaunches } = require('../../models/launches.model');
 const { connectMongoDB, disconnectMongoDB } = require('../../services/mongodb');
-
-const TEST_MONGO_URL = 'mongodb://127.0.0.1:27017/nasa-api';
 
 describe('Launches API', () => {
 
   beforeAll(async () => {
-    await connectMongoDB(TEST_MONGO_URL);
+    await connectMongoDB();
+    await loadPlanetsData();
+    await syncSpaceXLaunches();
   })
 
   afterAll(async () => {
@@ -17,7 +19,7 @@ describe('Launches API', () => {
   describe('Test GET /launches', () => {
     test('It should respond with 200 success', async () => {
       const response = await request(app)
-        .get('/launches')
+        .get('/v1/launches')
         .expect('Content-Type', /json/)
         .expect(200);
     });
@@ -39,7 +41,7 @@ describe('Launches API', () => {
   
     test('It should respond with 201 success', async () => {
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(completeLaunchData)
         .expect('Content-Type', /json/)
         .expect(201);
@@ -53,7 +55,7 @@ describe('Launches API', () => {
   
     test('It should catch missing required properties', async () => {
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(launchDataWithoutDate)
         .expect('Content-Type', /json/)
         .expect(400);
@@ -65,7 +67,7 @@ describe('Launches API', () => {
   
     test('It should catch invalid dates', async () => {
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send({
           ...launchDataWithoutDate,
           launchDate: 'not valid'
@@ -89,11 +91,11 @@ describe('Launches API', () => {
   
     test('It should respond with 200 success', async () => {
       const testLaunchResponse = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(launchData);
   
       const response = await request(app)
-        .delete(`/launches/${testLaunchResponse.body.flightNumber}`);
+        .delete(`/v1/launches/${testLaunchResponse.body.flightNumber}`);
   
       expect(response.body).toMatchObject({ isAborted: true });
     });

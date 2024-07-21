@@ -18,8 +18,8 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(CLIENT_SPA_APP_PATH));
 
-app.use('/planets', planetsRouter);
-app.use('/launches', launchesRouter);
+app.use('/v1/planets', planetsRouter);
+app.use('/v1/launches', launchesRouter);
 
 app.get('/*', (req, res) => {
   return res.sendFile(path.join(CLIENT_SPA_APP_PATH, 'index.html'));

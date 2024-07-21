@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - MONGO_URL=mongodb://db:27017/nasa
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: mongodb/mongodb-community-server
+    ports:
+      - 27017:27017

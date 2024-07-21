@@ -1,12 +1,13 @@
 const http = require('http');
 
+require('dotenv').config();
+
 const app = require('./app');
 const { loadPlanetsData } = require('./models/planets.model');
 const { syncSpaceXLaunches } = require('./models/launches.model');
 const { connectMongoDB, disconnectMongoDB } = require('./services/mongodb');
 
 const PORT = process.env.PORT || 3001;
-const MONGO_URL = 'mongodb://127.0.0.1:27017/nasa-api';
 
 const server = http.createServer(app);
 
@@ -19,7 +20,7 @@ async function onShutdown () {
 }
 
 async function startServer () {
-  await connectMongoDB(MONGO_URL);
+  await connectMongoDB();
   await loadPlanetsData();
   await syncSpaceXLaunches();
   

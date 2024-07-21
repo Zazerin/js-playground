@@ -53,7 +53,7 @@ async function httpAbortLaunch (req, res) {
 
   if (!isAborted) {
     return res.status(400).json({
-      error: 'Launch hot aborted',
+      error: 'Launch not aborted',
     });
   }
   

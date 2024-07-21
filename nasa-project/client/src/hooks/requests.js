@@ -1,4 +1,4 @@
-const API_URL = '';
+const API_URL = 'v1';
 
 async function httpGetPlanets() {
   const response = await fetch(`${API_URL}/planets`);

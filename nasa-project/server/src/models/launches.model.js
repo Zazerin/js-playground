@@ -4,6 +4,18 @@ const { getSpaceXLaunches } = require('../services/spacex-api');
 
 const DEFAULT_FLIGHT_NUMBER = 100;
 
+async function saveLaunch (launch) {
+  return await launchesModel.updateOne(
+    {
+      flightNumber: launch.flightNumber
+    },
+    launch,
+    {
+      upsert: true
+    }
+  );
+}
+
 async function syncSpaceXLaunches () {
 
   const firstLaunch = await isExistsLaunch(1);
@@ -45,18 +57,6 @@ async function getLastFlightNumber () {
   const launch = await launchesModel.findOne({}, "flightNumber").sort('-flightNumber');
 
   return launch?.flightNumber;
-}
-
-async function saveLaunch (launch) {
-  return await launchesModel.findOneAndUpdate(
-    {
-      flightNumber: launch.flightNumber
-    },
-    launch,
-    {
-      upsert: true
-    }
-  );
 }
 
 async function addNewLaunch (launch) {
