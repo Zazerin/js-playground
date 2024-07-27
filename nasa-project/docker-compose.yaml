@@ -12,5 +12,3 @@ services:
       - db
   db:
     image: mongodb/mongodb-community-server
-    ports:
-      - 27017:27017
